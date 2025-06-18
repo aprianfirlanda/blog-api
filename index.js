@@ -19,6 +19,10 @@ testDB();
 
 app.use(express.json());
 
+// Example: import and use your API routes
+const routes = require('./src/routes');
+app.use('/api', routes);
+
 // Default health check route
 app.get('/', (req, res) => {
   res.json({ message: 'Blog API is running!' });
