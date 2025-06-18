@@ -2,8 +2,6 @@ const express = require('express');
 const sequelize = require('./config/database');
 const app = express();
 
-const PORT = process.env.PORT || 3000;
-
 // Test database connection
 async function testDB() {
   try {
@@ -32,10 +30,6 @@ app.get('/', (req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 module.exports = app;
