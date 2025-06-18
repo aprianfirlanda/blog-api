@@ -1,8 +1,9 @@
 const sequelize = require('../../config/database');
-const UserModel = require('./user');
-
-const User = UserModel(sequelize, require('sequelize').DataTypes);
+const User = require('./user')(sequelize);
+const Post = require('./post')(sequelize);
 
 module.exports = {
-  User
+  User,
+  Post,
+  sequelize
 };

@@ -84,3 +84,24 @@ npx sequelize-cli db:seed:undo
 ```
 This removes the last batch of seeded data.
 
+Create a simple REST API with the following details:
+- This API manages blog posts with a user authentication system using JWT.
+
+create me api for post
+- create db migrations
+- Post is an entity with the following properties:
+    - id
+    - content
+    - createdAt
+    - updatedAt
+    - authorId, which is the id of the user who created this post.
+- The output of this test consists of 5 endpoints as follows:
+    - Endpoint to get all posts.
+    - Endpoint to get a post by post id.
+    - Endpoint to create a post, which must be authenticated user.
+    - Endpoint to update a post, which must be authenticated user and user id must match post authorId.
+    - Endpoint to delete a post, which must be authenticated user and user id must match post authorId.
+- Dont forget create this:
+    - Unit test with data seeders
+    - migration
+

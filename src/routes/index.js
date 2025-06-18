@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-
 const userRoute = require('./user');
-// If you have other entity routes, import them as well
+const postRoutes = require('./post');
 
 router.use('/users', userRoute);
-// Add other routes as needed, e.g., router.use('/posts', postRoute);
+router.use('/posts', postRoutes);
 
 module.exports = router;

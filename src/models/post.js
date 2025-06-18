@@ -1,35 +1,30 @@
 const { Model, DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  class User extends Model {}
+  class Post extends Model {}
 
-  User.init(
+  Post.init(
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      name: {
-        type: DataTypes.STRING,
+      content: {
+        type: DataTypes.TEXT,
         allowNull: false
       },
-      email: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false
-      },
-      password: {
-        type: DataTypes.STRING,
+      authorId: {
+        type: DataTypes.INTEGER,
         allowNull: false
       }
     },
     {
       sequelize,
-      modelName: 'User',
-      tableName: 'Users'
+      modelName: 'Post',
+      tableName: 'Posts'
     }
   );
 
-  return User;
+  return Post;
 };
