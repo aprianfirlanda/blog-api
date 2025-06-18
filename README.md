@@ -10,6 +10,34 @@ Library note:
 - `jest` is set up for unit testing.
 - `nodemon` is for development auto-reloading.
 
+## Folder Structure
+
+```
+blog-api/
+│
+├── package.json        # Project metadata, scripts, dependencies.
+├── .env                # Environment variables (e.g., DB credentials, secrets).
+├── .gitignore          # Lists files/folders to be ignored by Git.
+├── README.md           # Project documentation.
+├── index.js            # Main entry point; starts your Express app.
+│
+├── config/
+│   └── config.js       # Configuration for database and possibly other app settings.
+│
+├── src/
+│   ├── controllers/    # Functions that process HTTP requests (business logic for each route).
+│   ├── middlewares/    # Functions processing requests before controllers (e.g., authentication, logging).
+│   ├── models/         # Database models (data structures, used by Sequelize).
+│   ├── routes/         # Defines API endpoints (URL patterns and handler connections).
+│   ├── services/       # Business logic or operations reused by controllers (like fetching or updating data).
+│   └── utils/          # Helper functions and utility modules for general use.
+│
+├── migrations/         # Database migration scripts (auto-generated/managed by Sequelize CLI).
+├── seeders/            # Seed files for populating or cleaning database data (e.g., mock data).
+│
+└── tests/              # Unit and integration tests, often matching /src structure.
+```
+
 
 ## Database Migration
 
