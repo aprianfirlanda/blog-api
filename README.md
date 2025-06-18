@@ -1,107 +1,126 @@
-# BLOG API
+# Blog API
 
-Requirement:
-- node js version 22.16.0 (current LTS when the project created)
-- MySQL database version 8.0 (or you can use docker-compose `docker-compose up -d`).
-
-Library note:
-- `mysql2` is required for Sequelize to connect to MySQL.
-- `sequelize-cli` is included for migration commands.
-- `jest` is set up for unit testing.
-- `nodemon` is for development auto-reloading.
-
-## Folder Structure
-
-```
-blog-api/
-│
-├── package.json        # Project metadata, scripts, dependencies.
-├── .env                # Environment variables (e.g., DB credentials, secrets).
-├── .gitignore          # Lists files/folders to be ignored by Git.
-├── README.md           # Project documentation.
-├── index.js            # Main entry point; starts your Express app.
-│
-├── config/
-│   └── config.js       # Configuration for database and possibly other app settings.
-│
-├── src/
-│   ├── controllers/    # Functions that process HTTP requests (business logic for each route).
-│   ├── middlewares/    # Functions processing requests before controllers (e.g., authentication, logging).
-│   ├── models/         # Database models (data structures, used by Sequelize).
-│   ├── routes/         # Defines API endpoints (URL patterns and handler connections).
-│   ├── services/       # Business logic or operations reused by controllers (like fetching or updating data).
-│   └── utils/          # Helper functions and utility modules for general use.
-│
-├── migrations/         # Database migration scripts (auto-generated/managed by Sequelize CLI).
-├── seeders/            # Seed files for populating or cleaning database data (e.g., mock data).
-│
-└── tests/              # Unit and integration tests, often matching /src structure.
-```
-
-
-## Database Migration
-
-This project uses **Sequelize CLI** to handle database migrations and seeders. Please ensure you have configured your database connection in `config/config.js` as required.
+A simple REST API for blogging with user authentication built with Node.js, Express, Sequelize, MySQL, and JWT.
 
 ---
 
-### Running Migrations
-Generate new migration file.
+## Features
+
+- **User Registration & Login**: Secure JWT-based authentication for users.
+- **Create Posts**: Authenticated users can create blog posts.
+- **Read Posts**: Anyone can view all posts or individual posts.
+- **Update Posts**: Only the author can update a post.
+- **Delete Posts**: Only the author can delete a post.
+- **Robust Testing**: Automated tests with Jest and Supertest.
+- **MySQL Database**: Database migrations and seeders managed via Sequelize CLI.
+
+---
+
+## Tech Stack
+
+- **Runtime:** Node.js >= 22.16.0
+- **Database:** MySQL 8.0+
+- **ORM:** Sequelize
+- **Testing:** Jest, Supertest
+- **Authentication:** JWT
+
+---
+
+## Getting Started
+
+### 1. Prerequisites
+
+- [Node.js](https://nodejs.org/en/) (v22.16.0 or above)
+- [MySQL](https://www.mysql.com/) (8.0 or above)
+- [npm](https://www.npmjs.com/get-npm)
+- *(optionally)* [Docker Compose](https://docs.docker.com/compose/) for easier local DB setup
+
+---
+
+### 2. Installation
+
+Clone the repository and install dependencies:
 ```shell
-npx sequelize-cli migration:generate --name your-migration-name
+git clone https://github.com/aprianfirlanda/blog-api
+cd blog-api
+npm install
 ```
-this command creates a new file in the folder where you define how to create or change tables. `migrations`
 
 
-Run all pending migrations to set up or update your database schema:
+---
+
+### 3. Database Setup
+
+Update your `.env` or `config/config.js` file with your MySQL credentials.
+
+#### Using Docker (Optional)
+
+You can quickly run MySQL with:
+```shell
+docker-compose up -d
+```
+
+
+---
+
+#### Run Migrations and Seeders
+
+Run all migrations
 ```shell
 npm run db:migrate
 ```
-This will set up your database structure based on your latest migration files.
+# (Optional) Seed database with test data
+```shell
+npm run db:seed
+```
 
-If you make a mistake and need to undo the last change, you can run:
+
+---
+
+### 4. Running the App
+
+Start the application:
+```shell
+node server.js
+```
+The server will run at [http://localhost:3000](http://localhost:3000) by default.
+
+---
+
+### 5. Running Tests
+
+Tests use an in-memory database (or your test database defined in config) and require no manual server start.
+```shell
+npm test
+```
+
+
+---
+
+## API Endpoints
+
+### Authentication
+
+- `POST /api/users/register` — Register a new user.
+- `POST /api/users/login` — Log in and receive a JWT.
+
+### Post Management
+
+- `GET /api/posts` — Get all posts (public).
+- `GET /api/posts/:id` — Get a single post by its ID (public).
+- `POST /api/posts` — Create a post (requires authentication).
+- `PUT /api/posts/:id` — Update a post (author only).
+- `DELETE /api/posts/:id` — Delete a post (author only).
+
+---
+
+## Useful Commands
+
+**Run migrations:**
+```shell
+npm run db:migrate
+```
+**Undo las migration:**
 ```shell
 npm run db:migrate:undo
 ```
-
-
-### Running Seeders
-Generate a new migration file.
-```shell
-npx npx sequelize-cli seed:generate --name your-seed-name
-```
-This creates a file in the seeders folder where you write the data you want to insert.
-
-Run all seeders.
-```shell
-npx sequelize-cli db:seed:all
-```
-- This executes all seeder files and populates your database.
-
-If you make a mistake and need to undo the last change, you can run:
-```shell
-npx sequelize-cli db:seed:undo
-```
-This removes the last batch of seeded data.
-
-Create a simple REST API with the following details:
-- This API manages blog posts with a user authentication system using JWT.
-
-create me api for post
-- create db migrations
-- Post is an entity with the following properties:
-    - id
-    - content
-    - createdAt
-    - updatedAt
-    - authorId, which is the id of the user who created this post.
-- The output of this test consists of 5 endpoints as follows:
-    - Endpoint to get all posts.
-    - Endpoint to get a post by post id.
-    - Endpoint to create a post, which must be authenticated user.
-    - Endpoint to update a post, which must be authenticated user and user id must match post authorId.
-    - Endpoint to delete a post, which must be authenticated user and user id must match post authorId.
-- Dont forget create this:
-    - Unit test with data seeders
-    - migration
-
