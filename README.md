@@ -63,25 +63,11 @@ docker-compose up -d
 
 ---
 
-#### Run Migrations and Seeders
-
-Run all migrations
-```shell
-npm run db:migrate
-```
-# (Optional) Seed database with test data
-```shell
-npm run db:seed
-```
-
-
----
-
 ### 4. Running the App
 
 Start the application:
 ```shell
-node server.js
+npm run dev
 ```
 The server will run at [http://localhost:3000](http://localhost:3000) by default.
 
@@ -99,18 +85,209 @@ npm test
 
 ## API Endpoints
 
+> All authenticated routes require the following header:  
+> `Authorization: Bearer <your_jwt_token>`
+
+---
+
 ### Authentication
 
-- `POST /api/users/register` — Register a new user.
-- `POST /api/users/login` — Log in and receive a JWT.
+#### Register a New User
 
-### Post Management
+- **Endpoint:** `POST /api/users/register`
+- **Request (JSON):**
+  ```json
+  {
+    "name": "string, required",
+    "email": "string, required, email",
+    "password": "string, required, min 6 chars"
+  }
+  ```
+- **Response (201 Created):**
+  ```json
+  {
+    "message": "User registered successfully",
+    "user": {
+      "id": 1,
+      "name": "Test User",
+      "email": "email@example.com"
+    }
+  }
+  ```
+- **Response (400 Bad Request):**
+  ```json
+  {
+    "error": "Email already in use"
+  }
 
-- `GET /api/posts` — Get all posts (public).
-- `GET /api/posts/:id` — Get a single post by its ID (public).
-- `POST /api/posts` — Create a post (requires authentication).
-- `PUT /api/posts/:id` — Update a post (author only).
-- `DELETE /api/posts/:id` — Delete a post (author only).
+  ```
+- **cURL Example:**
+  ```shell
+  curl -X POST http://localhost:3000/api/users/register \
+    -H "Content-Type: application/json" \
+    -d '{"name": "Test User", "email": "testuser@example.com", "password": "supersecret"}'
+  ```
+
+---
+
+#### User Login
+
+- **Endpoint:** `POST /api/users/login`
+- **Request (JSON):**
+  ```json
+  {
+    "email": "string, required, email",
+    "password": "string, required"
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "token": "<jwt_token>"
+  }
+  ```
+- **cURL Example:**
+  ```shell
+  curl -X POST http://localhost:3000/api/users/login \
+    -H "Content-Type: application/json" \
+    -d '{"email": "testuser@example.com", "password": "supersecret"}'
+  ```
+
+---
+
+### Posts
+
+#### Get All Posts
+
+- **Endpoint:** `GET /api/posts`
+- **Response:**
+  ```json
+  [
+    {
+      "id": 1,
+      "title": "First Post",
+      "content": "Hello World",
+      "author": "user",
+      "createdAt": "2025-05-20T15:00:00.000Z"
+    }
+  ]
+  ```
+- **cURL Example:**
+  ```shell
+  curl http://localhost:3000/api/posts
+  ```
+
+---
+
+#### Get Single Post
+
+- **Endpoint:** `GET /api/posts/:id`
+- **Response:**
+  ```json
+  {
+    "id": 1,
+    "title": "First Post",
+    "content": "Hello World",
+    "author": "user",
+    "createdAt": "2025-05-20T15:00:00.000Z"
+  }
+  ```
+- **cURL Example:**
+  ```shell
+  curl http://localhost:3000/api/posts/1
+  ```
+
+---
+
+#### Create a Post
+
+- **Endpoint:** `POST /api/posts`
+- **Headers:**  
+  `Authorization: Bearer <jwt_token>`
+- **Request (JSON):**
+  ```json
+  {
+    "title": "string, required",
+    "content": "string, required"
+  }
+  ```
+- **Response (201 Created):**
+  ```json
+  {
+    "id": 3,
+    "title": "My New Post",
+    "content": "Post content here.",
+    "author": "user",
+    "createdAt": "2025-06-19T10:00:00.000Z"
+  }
+  ```
+- **cURL Example:**
+  ```shell
+  curl -X POST http://localhost:3000/api/posts \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <jwt_token>" \
+    -d '{"title": "My New Post", "content": "Post content here."}'
+  ```
+
+---
+
+#### Update a Post
+
+- **Endpoint:** `PUT /api/posts/:id`
+- **Headers:**  
+  `Authorization: Bearer <jwt_token>`
+- **Request (JSON):**
+  ```json
+  {
+    "title": "string, optional",
+    "content": "string, optional"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "message": "Post updated",
+    "post": {
+      "id": 3,
+      "title": "Updated Title",
+      "content": "Updated content",
+      "author": "user",
+      "updatedAt": "2025-06-19T11:00:00.000Z"
+    }
+  }
+  ```
+- **cURL Example:**
+  ```shell
+  curl -X PUT http://localhost:3000/api/posts/3 \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <jwt_token>" \
+    -d '{"title": "Updated Title", "content": "Updated content"}'
+  ```
+
+---
+
+#### Delete a Post
+
+- **Endpoint:** `DELETE /api/posts/:id`
+- **Headers:**  
+  `Authorization: Bearer <jwt_token>`
+- **Response:**
+  ```json
+  {
+    "message": "Post deleted"
+  }
+  ```
+- **cURL Example:**
+  ```shell
+  curl -X DELETE http://localhost:3000/api/posts/3 \
+    -H "Authorization: Bearer <jwt_token>"
+  ```
+
+---
+
+**Note:**
+- All protected endpoints require a valid JWT token in the `Authorization` header.
+- Replace `<jwt_token>` with your actual JWT obtained from the login route.
 
 ---
 
